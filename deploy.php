@@ -7,6 +7,8 @@
 declare(strict_types=1);
 header('Content-Type: text/plain; charset=utf-8');
 header('Cache-Control: no-store');
+ignore_user_abort(true);
+set_time_limit(120);
 
 const ZIP_URL  = 'https://codeload.github.com/zephcompany/cleyton-andrey/zip/refs/heads/main';
 const IGNORAR  = ['README.md', '.gitignore', '.github'];   // ficam só no GitHub
@@ -45,17 +47,32 @@ function listar(string $raiz, string $rel = ''): array {
 if (file_exists($trava) && time() - filemtime($trava) < 15) sair(429, 'Atualização recente, aguarde alguns segundos.', $log);
 touch($trava);
 
-// 1) baixa o zip da main
-$fp = fopen($zip, 'wb');
-$ch = curl_init(ZIP_URL);
-curl_setopt_array($ch, [CURLOPT_FILE => $fp, CURLOPT_FOLLOWLOCATION => true, CURLOPT_TIMEOUT => 60, CURLOPT_FAILONERROR => true, CURLOPT_USERAGENT => 'deploy-hostinger']);
-$ok = curl_exec($ch); $err = curl_error($ch); curl_close($ch); fclose($fp);
-if (!$ok) sair(502, "Falha ao baixar do GitHub: $err", $log);
+// 1) baixa o zip da main (sempre a main deste repositório, nunca outro endereço).
+// Se o webhook informou o commit novo, só serve como referência para esperar o
+// pacote da main ficar atualizado no GitHub; o commit em si nunca é baixado direto.
+$esperado = null;
+$payload = json_decode($_POST['payload'] ?? (file_get_contents('php://input') ?: 'null'), true);
+if (is_array($payload) && ($payload['ref'] ?? '') === 'refs/heads/main'
+    && isset($payload['after']) && preg_match('/^[0-9a-f]{40}$/', (string) $payload['after'])) {
+    $esperado = $payload['after'];
+}
+$versao = '?';
+for ($tentativa = 1; $tentativa <= 8; $tentativa++) {
+    $fp = fopen($zip, 'wb');
+    $ch = curl_init(ZIP_URL);
+    curl_setopt_array($ch, [CURLOPT_FILE => $fp, CURLOPT_FOLLOWLOCATION => true, CURLOPT_TIMEOUT => 60, CURLOPT_FAILONERROR => true, CURLOPT_USERAGENT => 'deploy-hostinger']);
+    $ok = curl_exec($ch); $err = curl_error($ch); curl_close($ch); fclose($fp);
+    if (!$ok) sair(502, "Falha ao baixar do GitHub: $err", $log);
+    $z = new ZipArchive();
+    if ($z->open($zip) !== true) sair(500, 'Zip inválido.', $log);
+    $versao = trim((string) $z->getArchiveComment());   // o GitHub grava o commit no comentário do zip
+    if ($esperado === null || $versao === $esperado) break;
+    $z->close();
+    sleep(4);                                             // pacote ainda antigo: espera e tenta de novo
+}
 
 // 2) extrai numa pasta temporária
 apagar($novo); mkdir($novo, 0755, true);
-$z = new ZipArchive();
-if ($z->open($zip) !== true) sair(500, 'Zip inválido.', $log);
 $z->extractTo($novo); $z->close(); @unlink($zip);
 $pastas = array_values(array_filter(scandir($novo), fn($f) => $f[0] !== '.'));
 if (count($pastas) !== 1 || !is_file("$novo/{$pastas[0]}/index.html")) sair(500, 'Conteúdo inesperado no zip (sem index.html).', $log);
@@ -83,4 +100,4 @@ foreach (array_reverse(listar($site)) as $r) {
 }
 apagar($novo);
 
-sair(200, "Site atualizado: $copiados arquivo(s) novo(s) ou alterado(s), $removidos removido(s).", $log);
+sair(200, "Site atualizado (" . substr($versao, 0, 7) . "): $copiados arquivo(s) novo(s) ou alterado(s), $removidos removido(s).", $log);
