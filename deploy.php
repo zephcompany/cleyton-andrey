@@ -43,10 +43,6 @@ function listar(string $raiz, string $rel = ''): array {
     return $out;
 }
 
-// evita duas atualizações ao mesmo tempo / chamadas em sequência
-if (file_exists($trava) && time() - filemtime($trava) < 15) sair(429, 'Atualização recente, aguarde alguns segundos.', $log);
-touch($trava);
-
 // 1) baixa o zip da main (sempre a main deste repositório, nunca outro endereço).
 // Se o webhook informou o commit novo, só serve como referência para esperar o
 // pacote da main ficar atualizado no GitHub; o commit em si nunca é baixado direto.
@@ -56,8 +52,21 @@ if (is_array($payload) && ($payload['ref'] ?? '') === 'refs/heads/main'
     && isset($payload['after']) && preg_match('/^[0-9a-f]{40}$/', (string) $payload['after'])) {
     $esperado = $payload['after'];
 }
+// responde logo (o GitHub desiste depois de 10 s) e continua o trabalho em segundo plano
+if ($esperado !== null) {
+    http_response_code(202);
+    echo "Recebido, atualizando para " . substr($esperado, 0, 7) . ".\n";
+    if (function_exists('litespeed_finish_request')) litespeed_finish_request();
+    elseif (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
+    else { @ob_flush(); flush(); }
+}
+
+// uma atualização por vez: as seguintes esperam a anterior terminar
+$tr = fopen($trava, 'c');
+flock($tr, LOCK_EX);
+
 $versao = '?';
-for ($tentativa = 1; $tentativa <= 8; $tentativa++) {
+for ($tentativa = 1; $tentativa <= 15; $tentativa++) {
     $fp = fopen($zip, 'wb');
     $ch = curl_init(ZIP_URL);
     curl_setopt_array($ch, [CURLOPT_FILE => $fp, CURLOPT_FOLLOWLOCATION => true, CURLOPT_TIMEOUT => 60, CURLOPT_FAILONERROR => true, CURLOPT_USERAGENT => 'deploy-hostinger']);
