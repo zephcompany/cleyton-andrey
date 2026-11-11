@@ -2,7 +2,7 @@
 
 Landing page publicada em https://engenhariadascartasdeconsorcio.com
 
-Site estático (HTML + imagens). Cada alteração enviada para a branch `main` é publicada automaticamente na Hostinger.
+Site estático (HTML + imagens).
 
 - `index.html` — a página inteira (estilos e scripts inclusos)
 - `assets/` — imagens e logos
@@ -10,8 +10,9 @@ Site estático (HTML + imagens). Cada alteração enviada para a branch `main` �
 
 ## Deploy
 
-O arquivo `.github/workflows/deploy.yml` envia o site para a Hostinger (via SSH + rsync) a cada `push` na `main`.
-Ele precisa do secret `HOSTINGER_SSH_KEY` em **Settings → Secrets and variables → Actions**, com a chave privada de deploy.
-Para publicar à mão: aba **Actions → Deploy na Hostinger → Run workflow**.
+Cada envio para a branch `main` vai para o ar sozinho:
+o webhook do GitHub chama `https://engenhariadascartasdeconsorcio.com/deploy.php`,
+que baixa a `main` deste repositório (público) e atualiza os arquivos na Hostinger.
 
-Último deploy configurado em 11/11/2026.
+Para forçar uma atualização, basta abrir esse endereço no navegador.
+Os arquivos `README.md` e `.gitignore` ficam só aqui no GitHub.
