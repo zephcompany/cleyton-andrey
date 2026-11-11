@@ -1,0 +1,49 @@
+# Publica o site na Hostinger a cada envio para a branch main.
+# Também pode ser disparado à mão na aba Actions (botão "Run workflow").
+name: Deploy na Hostinger
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-hostinger
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SSH_HOST: 82.180.153.240
+      SSH_PORT: "65002"
+      SSH_USER: u224550650
+      REMOTE_DIR: domains/engenhariadascartasdeconsorcio.com/public_html/
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Preparar a chave SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
+        run: |
+          if [ -z "$SSH_PRIVATE_KEY" ]; then
+            echo "::error::Falta o secret HOSTINGER_SSH_KEY (Settings > Secrets and variables > Actions)."
+            exit 1
+          fi
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Enviar arquivos para o servidor
+        run: |
+          rsync -avz --delete \
+            --exclude ".git" --exclude ".github" \
+            --exclude "README.md" --exclude ".gitignore" \
+            --exclude ".htaccess" --exclude ".well-known" \
+            -e "ssh -i ~/.ssh/deploy_key -p $SSH_PORT" \
+            ./ "$SSH_USER@$SSH_HOST:$REMOTE_DIR"
+
+      - name: Conferir o site no ar
+        run: curl -fsS -o /dev/null -w "HTTP %{http_code}\n" https://engenhariadascartasdeconsorcio.com/
