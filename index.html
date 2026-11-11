@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engenharia de Cartas de Crédito de Alto Lucro</title>
+<link rel="icon" type="image/png" href="assets/logo.png">
+<meta name="description" content="Descubra o Mecanismo de Multiplicação de Cartas de Crédito e aprenda a analisar oportunidades no mercado de consórcios.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;600&family=Baskervville:ital@1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08110f; --bg2:#0b1614; --surface:#0f1b18; --surface2:#14221f; --line:rgba(255,255,255,.08);
+  --text:#f2efe6; --muted:#a4ada7; --cream:#f1ecdf; --ink:#12201c; --ink-muted:#5d6a63;
+  --accent:#e9c98f; --accent-deep:#c79a52;
+  --accent-grad:linear-gradient(100deg,#e2bf87 0%,#f8dcb3 38%,#f8dcb3 58%,#e9b566 100%);
+  --radius-card:22px; --container:1320px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html.lenis{scroll-behavior:auto}
+body{background:var(--bg);color:var(--text);font-family:"Albert Sans",sans-serif;font-weight:400;font-size:18px;line-height:1.42;letter-spacing:-.01em;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::selection{background:var(--accent);color:var(--ink)}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{font-weight:300;text-wrap:balance}
+p,li{text-wrap:pretty}
+.wrap{max-width:var(--container);margin-inline:auto;padding-inline:24px}
+em.k{font-family:"Baskervville",serif;font-style:italic;font-weight:400;letter-spacing:-.02em;background:var(--accent-grad);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.06em}
+.light em.k{background:linear-gradient(100deg,#a9782f,#c9984c 60%,#a9782f);-webkit-background-clip:text;background-clip:text}
+.eyebrow{font-size:13px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);font-weight:400;display:block;margin-bottom:26px}
+.light .eyebrow{color:#a9782f}
+h2{font-size:clamp(30px,3.7vw,53px);line-height:1.03;letter-spacing:-.035em}
+.lead{font-size:clamp(18px,1.6vw,23px);line-height:1.28;letter-spacing:-.02em;color:var(--text)}
+.muted{color:var(--muted)}
+b,strong{font-weight:600}
+
+/* ---------- entrada no scroll (Zeph) ---------- */
+.rv{opacity:0;filter:blur(7px);transform:translateY(50px);transition:opacity .7s ease,filter .7s ease,transform .8s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;filter:blur(0);transform:none}
+.d1{transition-delay:.12s}.d2{transition-delay:.24s}.d3{transition-delay:.36s}.d4{transition-delay:.48s}
+
+/* ---------- H2 revelando de entrada (Zeph) ---------- */
+.ze__l{display:block;width:fit-content;position:relative;white-space:nowrap}
+.center .ze__l{margin-inline:auto}
+.is-pronto .ze__l{clip-path:inset(0 100% 0 0)}
+.is-pronto .ze__l::after{content:"";position:absolute;inset:0;background:var(--accent);transform-origin:right;transform:scaleX(1)}
+.is-pronto.is-visivel .ze__l{clip-path:inset(0 -2% 0 0);transition:clip-path .55s cubic-bezier(.165,.84,.44,1) calc(var(--i)*.1s)}
+.is-pronto.is-visivel .ze__l::after{transform:scaleX(0);transition:transform .45s cubic-bezier(.165,.84,.44,1) calc(var(--i)*.1s + .35s)}
+.is-pronto.sem-anim .ze__l,.is-pronto.sem-anim .ze__l::after{transition:none!important}
+
+/* ---------- menu ---------- */
+.nav{position:fixed;top:18px;left:0;right:0;z-index:50;display:flex;justify-content:center;padding-inline:16px;transition:transform .5s}
+.nav.hide{transform:translateY(-160%)}
+.nav__bar{position:relative;display:flex;align-items:center;gap:26px;padding:8px 8px 8px 20px;border-radius:999px;background:rgba(12,24,21,.62);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.nav__bar::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(-35deg,#ffffff40,transparent,transparent,#ffffff40);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.brand{display:flex;align-items:center;gap:11px;font-size:15px;letter-spacing:-.01em;white-space:nowrap}
+.brand i{width:30px;height:30px;border-radius:9px;background:var(--accent-grad);display:grid;place-items:center;flex:none}
+.brand b{font-weight:600}
+.ic{width:36px;height:36px;border-radius:10px;background:var(--accent-grad);display:inline-grid;place-items:center;flex:none;font-style:normal}
+.ic.lg{width:58px;height:58px;border-radius:15px}
+.ic.lg svg{width:26px;height:26px}
+.trio{position:relative;display:flex;justify-content:center;align-items:center;gap:18px;margin-bottom:36px}
+.trio::before{content:"";position:absolute;left:50%;top:50%;width:300px;height:1px;translate:-50% 0;background:linear-gradient(90deg,transparent,rgba(233,201,143,.5),transparent)}
+.trio .ic{position:relative;box-shadow:0 0 34px -6px rgba(233,201,143,.55)}
+.trio .ic:nth-child(2){width:74px;height:74px;border-radius:19px}
+.trio .ic:nth-child(2) svg{width:32px;height:32px}
+.brand__logo{width:auto;height:38px;margin:-2px 0;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5))}
+.foot__logo{width:auto;height:46px}
+.final__logo{position:relative;width:auto;height:132px;margin:0 auto 30px;filter:drop-shadow(0 20px 40px rgba(0,0,0,.6))}
+.nav__links{position:relative;display:flex;gap:4px;font-size:15px}
+.nav__links a{position:relative;z-index:2;padding:10px 14px;border-radius:999px;color:#dfe3dc}
+.nav__hl{position:absolute;top:0;left:0;z-index:1;border-radius:999px;background:#ffffff1f;border:1px solid #ffffff24;box-shadow:0 0 20px rgba(0,0,0,.25);pointer-events:none;opacity:0;transition:transform .3s ease,width .3s ease,height .3s ease,opacity .2s ease}
+.nav__hl.is-visible{opacity:1}
+.nav__cta{height:46px;padding:0 22px;border-radius:999px;background:var(--accent-grad);color:var(--ink);font-weight:600;font-size:14px;display:flex;align-items:center;white-space:nowrap;transition:transform .3s}
+.nav__cta:hover{transform:translateY(-2px)}
+
+/* ---------- botão com seta preenchendo (Zeph) ---------- */
+.btn{position:relative;isolation:isolate;overflow:hidden;display:inline-flex;align-items:center;height:78px;padding:0 96px 0 38px;border-radius:999px;background:var(--accent-grad);color:var(--ink);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;
+  box-shadow:0 0 44px -6px rgba(233,201,143,.6), inset 0 0 0 1.5px rgba(255,255,255,.45);transition:transform .35s, box-shadow .35s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 58px -4px rgba(233,201,143,.72), inset 0 0 0 1.5px rgba(255,255,255,.45)}
+.btn__t{position:relative;z-index:2;transition:color .45s}
+.btn .arw{position:absolute;z-index:1;right:10px;top:50%;translate:0 -50%;width:58px;height:58px;border-radius:999px;background:var(--ink);transition:width .5s cubic-bezier(.65,0,.35,1)}
+.btn .arw svg{position:absolute;right:18px;top:50%;translate:0 -50%;transition:transform .4s}
+.btn:hover .arw{width:calc(100% - 20px)} .btn:hover .btn__t{color:#f8dcb3} .btn:hover .arw svg{transform:rotate(45deg)}
+.seal{display:flex;align-items:center;gap:9px;margin-top:18px;font-size:12px;color:var(--muted);letter-spacing:0}
+.seal svg{flex:none}
+.light .seal{color:var(--ink-muted)}
+.cta{display:flex;flex-direction:column;align-items:flex-start}
+.center .cta,.cta.center{align-items:center}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;margin:12px;border-radius:30px;overflow:hidden;background:
+  radial-gradient(900px 620px at 78% 42%, rgba(46,108,84,.42), transparent 65%),
+  radial-gradient(700px 500px at 12% 100%, rgba(233,201,143,.10), transparent 70%), var(--bg2);
+  border:1px solid var(--line)}
+.dots{position:absolute;inset:0;background-image:radial-gradient(circle,#fff 10%,transparent 10%);background-size:20px 20px;opacity:.055;pointer-events:none;-webkit-mask-image:radial-gradient(ellipse at 70% 40%,#000 10%,transparent 72%);mask-image:radial-gradient(ellipse at 70% 40%,#000 10%,transparent 72%)}
+.frame{position:absolute;pointer-events:none;border:1px solid rgba(233,201,143,.26)}
+.frame.a{width:240px;height:240px;right:-70px;top:120px;transform:rotate(45deg)}
+.frame.b{width:150px;height:150px;left:-60px;bottom:90px;transform:rotate(45deg)}
+.hero__in{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,600px);gap:20px;align-items:center;padding-block:124px 44px}
+.hero__in>.hero__vis{order:-1}
+.hero h1{font-size:clamp(34px,4.6vw,68px);line-height:.98;letter-spacing:-.045em}
+.hero .lead{margin-top:28px;max-width:540px}
+.hero__txt{margin-top:20px;max-width:520px;color:var(--muted);font-size:17px;display:grid;gap:10px}
+.hero__txt b{color:var(--text)}
+.hero .cta{margin-top:32px}
+.hero__bg{position:absolute;top:34px;left:-30px;height:900px;width:auto;max-width:none;-webkit-mask-image:linear-gradient(270deg,transparent 3%,#000 36%),linear-gradient(180deg,#000 70%,transparent 99%);-webkit-mask-composite:source-in;mask-image:linear-gradient(270deg,transparent 3%,#000 36%),linear-gradient(180deg,#000 70%,transparent 99%);mask-composite:intersect}
+.hero__veil{position:absolute;inset:0;background:linear-gradient(270deg,var(--bg2) 0%,rgba(11,22,20,.86) 28%,rgba(11,22,20,.3) 46%,rgba(11,22,20,0) 58%),linear-gradient(180deg,rgba(11,22,20,.5),rgba(11,22,20,0) 12%)}
+.hero__vis{position:relative;min-width:0;align-self:stretch;min-height:560px}
+.gcard{position:absolute;z-index:2;padding:16px 18px 14px;border-radius:20px;background:linear-gradient(150deg,rgba(20,38,33,.72),rgba(10,22,19,.5));-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid rgba(233,201,143,.26);box-shadow:0 40px 70px -30px #000,inset 0 1px 0 rgba(255,255,255,.08);animation:bob 7s ease-in-out infinite alternate}
+.gcard.g1{right:44px;left:auto;top:60%;width:260px}
+.gcard.g2{display:none}
+@keyframes bob{to{transform:translateY(-14px)}}
+.gcard__h{display:flex;align-items:center;gap:12px;font-size:12px;color:var(--muted);line-height:1.25;margin-bottom:10px}
+.gcard__h b{display:block;font-size:17px;font-weight:600;color:var(--text);letter-spacing:-.02em}
+.gcard__f{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-top:8px}
+.gline{display:block;width:100%;height:auto;overflow:visible}
+.gline__p{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 2.4s cubic-bezier(.4,0,.2,1) .8s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.gbars{display:flex;align-items:flex-end;gap:8px;height:86px}
+.gbars s{flex:1;height:var(--h);border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#f8dcb3,rgba(233,201,143,.25));transform-origin:bottom;animation:grow 1.2s cubic-bezier(.2,.7,.2,1) both}
+.gbars s:nth-child(2){animation-delay:.12s}.gbars s:nth-child(3){animation-delay:.24s}.gbars s:nth-child(4){animation-delay:.36s}.gbars s:nth-child(5){animation-delay:.48s}.gbars s:nth-child(6){animation-delay:.6s}
+@keyframes grow{from{transform:scaleY(0)}}
+.who{position:absolute;left:0;bottom:8px;display:flex;align-items:center;gap:13px;padding:11px 20px 11px 11px;border-radius:999px;background:rgba(10,22,19,.55);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);font-size:15px;font-weight:600;line-height:1.25}
+.who i{width:42px;height:42px;border-radius:50%;background:var(--accent-grad);color:var(--ink);display:grid;place-items:center;font-style:normal;font-weight:600}
+.who b{display:block;font-size:13px;font-weight:400;color:var(--muted)}
+.hero__vis::before{display:none;content:"";position:absolute;left:50%;top:50%;width:86%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;background:radial-gradient(closest-side,rgba(233,201,143,.20),rgba(46,108,84,.22) 55%,transparent 72%);filter:blur(10px)}
+.orbit{position:absolute;left:50%;top:50%;translate:-50% -50%;border-radius:50%;border:1px solid rgba(233,201,143,.2);aspect-ratio:1;pointer-events:none}
+.orbit.o1{width:78%}.orbit.o2{width:104%;border-color:rgba(233,201,143,.11);border-style:dashed;animation:spin 80s linear infinite}
+.orbit.o1::after{content:"";position:absolute;top:14%;left:14%;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 18px 4px rgba(233,201,143,.55)}
+@keyframes spin{to{rotate:360deg}}
+/* motion de moedas e notas */
+.fx{position:absolute;width:calc(var(--w)*var(--u,1));pointer-events:none;translate:0 calc(var(--sy,0)*var(--k,-.1)*1px);animation:drift var(--t) ease-in-out infinite alternate;will-change:transform}
+.fx img{width:100%;height:auto;filter:drop-shadow(0 18px 24px rgba(0,0,0,.55))}
+.fx.far{z-index:0;opacity:.78;filter:blur(2.5px)}
+.fx.near{z-index:3}
+.fx.spin img{animation:flip 3.6s linear infinite}
+@keyframes drift{from{transform:translate(0,0) rotate(var(--r0))}to{transform:translate(var(--dx),var(--dy)) rotate(var(--r1))}}
+@keyframes flip{to{transform:rotateY(360deg)}}
+.stream{position:absolute;inset:0;z-index:2;pointer-events:none}
+.stream i{position:absolute;left:var(--x);bottom:6%;width:calc(var(--s)*var(--u,1));opacity:0;animation:rise var(--t) cubic-bezier(.3,.1,.5,1) var(--dl) infinite}
+.stream img{width:100%;height:auto;animation:flip 2.4s linear infinite}
+@keyframes rise{0%{transform:translate(0,40px) scale(.5);opacity:0}14%{opacity:1}78%{opacity:1}100%{transform:translate(var(--dx),-460px) scale(1.15);opacity:0}}
+.chip{z-index:4}
+#cnt{font-variant-numeric:tabular-nums}
+.hero__vis img.obj{position:relative;width:112%;height:auto;max-width:760px;margin:-9% -8% -9% auto;mix-blend-mode:lighten;-webkit-mask-image:radial-gradient(closest-side,#000 62%,transparent 100%);mask-image:radial-gradient(closest-side,#000 62%,transparent 100%);animation:floaty 9s ease-in-out infinite}
+@keyframes floaty{50%{transform:translateY(-14px)}}
+.chip{position:absolute;display:flex;align-items:center;gap:13px;padding:13px 20px 13px 13px;border-radius:18px;background:rgba(16,30,26,.55);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);font-size:13px;color:var(--muted);line-height:1.25}
+.chip b{display:block;color:var(--text);font-size:17px;font-weight:600;letter-spacing:-.02em}
+.chip i{width:42px;height:42px;border-radius:11px;background:var(--accent-grad);display:grid;place-items:center;flex:none}
+.chip.c1{left:4%;bottom:15%}.chip.c2{right:-2%;top:13%}
+.path{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);padding:26px 0 34px}
+.path div{position:relative;padding-right:28px}
+.path div+div{padding-left:28px;border-left:1px solid var(--line)}
+.path .ic{margin-bottom:16px}
+.path span{display:flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent)}
+.path span::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(233,201,143,.5),transparent)}
+.path b{display:block;margin-top:12px;font-size:clamp(17px,1.45vw,21px);font-weight:400;letter-spacing:-.02em;line-height:1.15;color:var(--text)}
+.path small{display:block;margin-top:6px;font-size:14px;color:var(--muted)}
+
+/* ---------- faixa ---------- */
+.marquee{position:relative;overflow:hidden;padding-block:26px;border-block:1px solid var(--line);margin-top:34px}
+.marquee::before,.marquee::after{content:"";position:absolute;top:0;bottom:0;width:180px;z-index:2;pointer-events:none}
+.marquee::before{left:0;background:linear-gradient(to right,var(--bg),transparent)}
+.marquee::after{right:0;background:linear-gradient(to left,var(--bg),transparent)}
+.marquee__t{display:flex;gap:14px;width:max-content;animation:mq 38s linear infinite}
+@keyframes mq{to{transform:translateX(-50%)}}
+.pill{display:flex;align-items:center;gap:12px;padding:9px 20px 9px 9px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:15px;white-space:nowrap;color:#dfe3dc}
+.pill i{width:30px;height:30px;border-radius:9px;background:var(--accent-grad);display:grid;place-items:center;flex:none}
+
+/* ---------- seções ---------- */
+section{position:relative}
+.sec{padding-block:clamp(84px,11vw,170px)}
+.split{display:grid;grid-template-columns:minmax(0,560px) minmax(0,1fr);gap:clamp(40px,7vw,120px);align-items:start}
+.stack{display:grid;gap:16px;max-width:560px}
+.stack p{color:var(--muted)} .stack p b{color:var(--text)}
+.hl{font-size:clamp(20px,1.7vw,24px);line-height:1.22;letter-spacing:-.02em;color:var(--text)!important}
+
+.rows{margin-top:clamp(50px,6vw,90px);border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:50px 220px minmax(0,1fr) 30px;gap:18px;align-items:center;padding:30px 20px;border-bottom:1px solid var(--line);transition:background .35s}
+.row>*{transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.row:hover{background:rgba(255,255,255,.03)}
+.row:hover>span,.row:hover>p{transform:translateX(10px)}
+.row p{white-space:nowrap}
+.row span.n{font-size:14px;color:var(--accent);letter-spacing:.1em}
+.row span.t{display:flex;align-items:center;gap:12px;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+.row p{font-size:clamp(16px,1.8vw,26px);line-height:1.12;letter-spacing:-.025em;font-weight:300}
+.row>svg{opacity:.5;transition:transform .35s,opacity .35s;justify-self:end}
+.row:hover>svg{transform:translate(3px,-3px);opacity:1}
+.row .ic svg{display:block}
+.peek{position:fixed;left:0;top:0;z-index:40;width:250px;aspect-ratio:1;border-radius:22px;overflow:hidden;pointer-events:none;opacity:0;scale:.82;border:1px solid rgba(233,201,143,.4);box-shadow:0 40px 80px -30px #000;transition:opacity .3s,scale .45s cubic-bezier(.2,.7,.2,1);will-change:transform}
+.peek.on{opacity:1;scale:1}
+.peek img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .35s}
+.peek img.on{opacity:1}
+.note{margin-top:26px;font-size:clamp(19px,1.6vw,23px);letter-spacing:-.02em;max-width:640px}
+
+.manifesto{padding-block:clamp(70px,9vw,140px);background:var(--bg2);border-block:1px solid var(--line)}
+.manifesto .eyebrow{text-align:center}
+.fill{max-width:1080px;margin-inline:auto;text-align:center;font-size:clamp(26px,3.6vw,52px);line-height:1.08;letter-spacing:-.035em;font-weight:300}
+.fill .w{opacity:.16;transition:opacity .35s}
+.fill .w.on{opacity:1}
+.after{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,560px);gap:clamp(30px,6vw,100px);align-items:start;margin-top:clamp(60px,8vw,120px)}
+.after h3{font-size:clamp(26px,2.9vw,42px);line-height:1.05;letter-spacing:-.035em}
+.mock{position:relative;height:430px;margin-top:46px;max-width:600px}
+.mk{position:absolute;left:0;top:0;width:330px;padding:22px 22px 20px;border-radius:20px;background:var(--surface);border:1px solid rgba(255,255,255,.1);box-shadow:0 40px 70px -40px #000;rotate:-3deg}
+.mk.b{left:236px;top:74px;background:var(--surface2);rotate:4deg;z-index:2}
+.mk__h{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted);line-height:1.25}
+.mk__h i{width:38px;height:38px;border-radius:10px;background:var(--accent-grad);display:grid;place-items:center;flex:none}
+.mk__h b{display:block;color:var(--text);font-size:15px;font-weight:600}
+.mk__v{margin:18px 0 16px;padding-bottom:16px;border-bottom:1px solid var(--line);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.mk__v b{display:block;margin-top:6px;font-size:30px;font-weight:300;letter-spacing:-.03em;text-transform:none;color:var(--text)}
+.mk__r{display:grid;grid-template-columns:104px 1fr;align-items:center;gap:12px;font-size:13px;color:var(--muted);margin-top:11px}
+.mk__r s{display:block;height:6px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden}
+.mk__r s::after{content:"";display:block;height:100%;width:var(--w);border-radius:6px;background:var(--c,var(--accent))}
+.mk__f{display:flex;align-items:center;gap:8px;margin-top:18px;padding:9px 13px;border-radius:999px;font-size:13px;font-weight:600;width:fit-content}
+.mk__f.ok{background:rgba(127,214,166,.12);color:#8fdcae;border:1px solid rgba(127,214,166,.3)}
+.mk__f.no{background:rgba(232,140,92,.12);color:#eda77e;border:1px solid rgba(232,140,92,.32)}
+.mock__tag{position:absolute;left:0;bottom:0;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#6f7b75}
+
+/* painel claro */
+.light{background:var(--cream);color:var(--ink);border-radius:34px;margin:12px;overflow:hidden}
+.light .muted,.light .stack p{color:var(--ink-muted)}
+.light .stack p b,.light .hl{color:var(--ink)!important}
+.light .dots{background-image:radial-gradient(circle,#12201c 10%,transparent 10%);opacity:.07;-webkit-mask-image:linear-gradient(180deg,#000,transparent 60%);mask-image:linear-gradient(180deg,#000,transparent 60%)}
+.about{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:clamp(40px,7vw,110px);align-items:center}
+.story{position:relative;aspect-ratio:9/13.6;border-radius:24px;overflow:hidden;background:linear-gradient(160deg,#1a2c27,#0b1614);border:1px solid rgba(18,32,28,.12)}
+.story__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:46% 50%}
+.story__shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,17,15,.62) 0%,rgba(8,17,15,0) 22%,rgba(8,17,15,0) 68%,rgba(8,17,15,.55) 100%)}
+.story__bars{position:absolute;z-index:2;top:14px;left:14px;right:14px;display:flex;gap:5px}
+.story__bars s{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.3)}
+.story__bars s:first-child{background:#fff}
+.story__who{position:absolute;z-index:2;top:30px;left:16px;display:flex;align-items:center;gap:10px;color:#fff;font-size:13px}
+.story__who i{width:34px;height:34px;border-radius:50%;background:var(--accent-grad);display:grid;place-items:center;color:var(--ink);font-style:normal;font-weight:600}
+.story__who small{opacity:.6;margin-left:4px}
+.story__ph{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:12px;text-align:center;color:rgba(255,255,255,.62);font-size:13px;letter-spacing:.18em;text-transform:uppercase;padding:30px;border:1.5px dashed rgba(233,201,143,.4);margin:76px 16px 16px;border-radius:16px}
+.method{margin-top:22px;padding:22px 26px;border-radius:18px;background:#e8e2d2;border:1px solid rgba(18,32,28,.08);font-size:clamp(20px,1.9vw,26px);line-height:1.15;letter-spacing:-.025em}
+
+.head{max-width:900px;margin:clamp(80px,10vw,150px) auto 54px;text-align:center}
+.grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:18px}
+.card{grid-column:span 2;position:relative;padding:44px 40px 46px;border-radius:var(--radius-card);background:#f7f3e8;border:1px solid rgba(18,32,28,.09);transition:background .35s,border-color .35s,transform .35s}
+.card:nth-child(n+4){grid-column:span 3}
+.card:hover{background:#fbf8ef;border-color:rgba(169,120,47,.45);transform:translateY(-5px)}
+.card .n{position:absolute;top:44px;right:40px;font-size:13px;letter-spacing:.1em;color:#a9782f}
+.tile{width:54px;height:54px;border-radius:13px;background:var(--accent-grad);display:grid;place-items:center;margin-bottom:34px}
+.card h3{font-size:clamp(22px,2vw,28px);line-height:1.08;letter-spacing:-.03em;font-weight:400;color:var(--ink)}
+.card p{margin-top:14px;font-size:17px;color:var(--ink-muted)}
+
+.lives{position:relative;margin-top:18px;border-radius:28px;overflow:hidden;background:var(--bg2);color:var(--text);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:stretch}
+.lives__t{padding:clamp(36px,5vw,76px);display:grid;gap:18px;align-content:center}
+.lives__t .eyebrow{color:var(--accent);margin-bottom:6px}
+.lives__t h3{font-size:clamp(28px,3vw,44px);line-height:1.03;letter-spacing:-.035em}
+.lives__t p{color:var(--muted);max-width:480px}
+.lives__t p.hl{color:var(--text)!important}
+.lives__img{position:relative;min-height:340px}
+.lives__img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;-webkit-mask-image:linear-gradient(90deg,transparent,#000 38%);mask-image:linear-gradient(90deg,transparent,#000 38%)}
+.live-tag{position:absolute;right:22px;top:22px;display:flex;align-items:center;gap:9px;padding:9px 15px;border-radius:999px;background:rgba(8,17,15,.6);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.14);font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+.live-tag::before{content:"";width:8px;height:8px;border-radius:50%;background:#ff5a4d;animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.25}}
+.light .cta{margin-top:54px}
+
+/* objeções */
+.maybe{display:grid;gap:14px}
+.maybe div{display:flex;gap:18px;align-items:flex-start;padding:26px 28px;border-radius:var(--radius-card);background:var(--surface);border:1px solid var(--line);font-size:clamp(18px,1.5vw,21px);line-height:1.25;letter-spacing:-.02em;transition:background .35s,border-color .35s,transform .35s}
+.maybe div:hover{background:var(--surface2);border-color:rgba(233,201,143,.45);transform:translateY(-4px)}
+.maybe i{width:38px;height:38px;border-radius:10px;background:var(--accent-grad);display:grid;place-items:center;flex:none}
+.nem{margin-top:clamp(70px,9vw,130px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line)}
+.nem div{padding:36px 34px 40px 0;border-right:1px solid var(--line);margin-right:34px}
+.nem div:last-child{border-right:0;margin-right:0}
+.nem .ic{display:grid;margin-bottom:18px}
+.nem span{font-size:13px;letter-spacing:.1em;color:var(--accent)}
+.nem p{margin-top:18px;font-size:clamp(22px,2.2vw,31px);line-height:1.08;letter-spacing:-.03em;font-weight:300}
+.learn{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,560px);gap:clamp(30px,6vw,100px);margin-top:clamp(60px,7vw,100px);align-items:start}
+.learn h3{font-size:clamp(26px,2.9vw,42px);line-height:1.05;letter-spacing:-.035em}
+
+.final{position:relative;margin:12px;border-radius:34px;overflow:hidden;text-align:center;padding:clamp(70px,9vw,140px) 24px;background:radial-gradient(800px 480px at 50% 0%,rgba(46,108,84,.5),transparent 70%),var(--bg2);border:1px solid var(--line)}
+.final .dots{-webkit-mask-image:radial-gradient(ellipse at 50% 20%,#000 10%,transparent 70%);mask-image:radial-gradient(ellipse at 50% 20%,#000 10%,transparent 70%)}
+.final .tile{margin:0 auto 34px;width:62px;height:62px;border-radius:16px}
+.final .pre{color:var(--muted);font-size:clamp(18px,1.5vw,22px);letter-spacing:-.02em;margin-bottom:18px;position:relative}
+.final h2{max-width:1020px;margin-inline:auto;position:relative}
+.final .cta{margin-top:48px;position:relative}
+.disc{max-width:680px;margin:44px auto 0;font-size:13px;line-height:1.45;color:#7f8a84;font-style:italic;position:relative}
+
+footer{padding:34px 0 44px}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;font-size:13px;color:#7f8a84;border-top:1px solid var(--line);padding-top:28px}
+.foot nav{display:flex;gap:10px;align-items:center}
+.foot nav a{position:relative}
+.foot nav a::before{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .4s ease-in-out,transform-origin 0s .4s}
+.foot nav a:hover::before{transform:scaleX(1);transform-origin:right}
+.credit{padding:8px 16px;border-radius:999px;border:1px solid var(--line);color:#a4ada7;transition:border-color .3s,color .3s}
+.credit:hover{border-color:rgba(233,201,143,.45);color:var(--text)}
+
+@media (max-width:1180px){.row p{white-space:normal}}
+@media (max-width:980px){
+  .nav__links{display:none}
+  .hero__in{grid-template-columns:1fr;padding-block:104px 56px;gap:0}
+  .hero__vis{order:-1;width:100%;min-height:330px}
+  .hero__bg{top:0;right:0;left:0;width:100%;height:470px;object-fit:cover;object-position:26% 8%;-webkit-mask-image:none;mask-image:none}
+  .hero__veil{background:linear-gradient(180deg,rgba(11,22,20,.5) 0,rgba(11,22,20,0) 90px,rgba(11,22,20,0) 250px,var(--bg2) 462px)}
+  .who{left:0;bottom:22px}
+  .gcard.g1{display:none}
+  .gcard.g1 .gcard__h b{font-size:14px}
+  .gcard.g2{display:none}
+  .hero__vis img.obj{width:100%;margin:-4% 0 -6%}
+  .path{grid-template-columns:1fr 1fr;row-gap:24px;margin-top:34px}
+  .path div:nth-child(3){padding-left:0;border-left:0}
+  .mock{height:auto;display:grid;gap:14px;max-width:none}
+  .mk,.mk.b{position:relative;left:auto;top:auto;width:100%;rotate:0deg}
+  .mock__tag{position:static}
+  .chip{transform:scale(.74)} .chip.c1{left:-12%;bottom:6%;transform-origin:left} .chip.c2{right:-12%;top:8%;transform-origin:right}
+  .split,.after,.about,.learn,.lives{grid-template-columns:1fr}
+  .story{max-width:340px}
+  .row{grid-template-columns:44px minmax(0,1fr);gap:14px;padding:24px 4px}
+  .row p{white-space:normal}
+  .row:hover>span,.row:hover>p{transform:none}
+  .row span.t,.row>svg{display:none}
+  .card,.card:nth-child(n+4){grid-column:span 6;padding:34px 28px 36px}
+  .card .n{top:34px;right:28px}
+  .lives__img{min-height:240px;order:-1}
+  .lives__img img{-webkit-mask-image:linear-gradient(0deg,transparent,#000 40%);mask-image:linear-gradient(0deg,transparent,#000 40%)}
+  .nem{grid-template-columns:1fr}
+  .nem div{border-right:0;border-bottom:1px solid var(--line);margin-right:0;padding:28px 0}
+  .frame{display:none}
+  .hero__vis{--u:.56}
+  .stream i:nth-child(n+5){display:none}
+  .light,.final,.hero{margin:8px;border-radius:26px}
+}
+@media (max-width:480px){
+  body{font-size:16px}
+  .btn{width:100%;height:72px;padding:0 76px 0 24px;font-size:13px;letter-spacing:.03em;white-space:normal;line-height:1.15;text-align:left}
+  .cta{width:100%;align-items:stretch}
+  .seal{justify-content:center}
+  .nav__bar{gap:12px;padding-left:14px}
+  .brand span{display:none}
+  .ze__l{white-space:normal}
+}
+@media (prefers-reduced-motion:reduce){
+  .marquee__t,.hero__vis img.obj,.fx,.fx img,.orbit{animation:none}
+  .gcard,.gbars s{animation:none}
+  .gline__p{animation:none;stroke-dashoffset:0}
+  .stream{display:none}
+  .rv{opacity:1;filter:none;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- Link de checkout: troque aqui e todos os botões acompanham -->
+<script>const CHECKOUT_URL = "#";</script>
+
+<header class="nav" id="nav">
+  <div class="nav__bar">
+    <a class="brand" href="#topo">
+      <img class="brand__logo" src="assets/logo-full.png" alt="Engenharia de Cartas de Crédito" width="1200" height="289">
+    </a>
+    <nav class="nav__links" id="links">
+      <span class="nav__hl"></span>
+      <a href="#oportunidade">Oportunidade</a>
+      <a href="#mecanismo">O mecanismo</a>
+      <a href="#para-quem">Para quem é</a>
+    </nav>
+    <a class="nav__cta js-cta" href="#">Quero aprender</a>
+  </div>
+</header>
+
+<!-- ================= DOBRA 1 ================= -->
+<section class="hero" id="topo">
+  <img class="hero__bg" src="assets/hero-andrey.jpg" alt="Andrey" width="1536" height="1024">
+  <div class="hero__veil"></div>
+  <div class="wrap hero__in">
+    <div>
+      <span class="eyebrow rv">[ Engenharia de Cartas de Crédito ]</span>
+      <h1 class="rv d1">Descubra o novo Mecanismo de Multiplicação de <em class="k">Cartas de&nbsp;Crédito</em></h1>
+      <p class="lead rv d2">E como uma única carta de R$&nbsp;100&nbsp;mil pode abrir caminho para novas operações, diferentes fontes de renda e a construção de um patrimônio de R$&nbsp;500&nbsp;mil ou&nbsp;mais.</p>
+      <div class="hero__txt rv d3">
+        <p>Existe um lado do mercado de consórcios que a maioria das pessoas ainda não conhece. Um universo de oportunidades que vai muito além de comprar casas e&nbsp;carros.</p>
+        <p><b>E o mais interessante é que uma mesma carta pode abrir possibilidades de ganho completamente diferentes.</b> Tudo depende de um detalhe que poucos sabem&nbsp;analisar.</p>
+      </div>
+      <div class="cta rv d4">
+        <a class="btn js-cta" href="#"><span class="btn__t">Quero descobrir esse mecanismo</span><span class="arw"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f8dcb3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+        <div class="seal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Videoaulas + lives quinzenais com o Andrey</div>
+      </div>
+    </div>
+    <div class="hero__vis rv d2">
+      <div class="gcard g1" aria-hidden="true">
+        <div class="gcard__h"><i class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg></i><span>Carta de crédito<b>R$ 100 mil</b></span></div>
+        <svg class="gline" viewBox="0 0 260 96" fill="none"><defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9c98f" stop-opacity=".38"/><stop offset="1" stop-color="#e9c98f" stop-opacity="0"/></linearGradient></defs><path d="M0 84 L40 78 L78 62 L112 66 L150 42 L188 46 L226 20 L260 8 V96 H0Z" fill="url(#ga)"/><path class="gline__p" d="M0 84 L40 78 L78 62 L112 66 L150 42 L188 46 L226 20 L260 8" stroke="#f8dcb3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/><circle cx="260" cy="8" r="4.5" fill="#f8dcb3"/></svg>
+        <div class="gcard__f">Novas operações</div>
+      </div>
+      <div class="gcard g2" aria-hidden="true">
+        <div class="gcard__f" style="margin:0 0 12px">Fontes de renda</div>
+        <div class="gbars"><s style="--h:28%"></s><s style="--h:42%"></s><s style="--h:38%"></s><s style="--h:60%"></s><s style="--h:74%"></s><s style="--h:100%"></s></div>
+      </div>
+      <div class="who"><i>A</i><span>Andrey<b>Gestor e especialista em consórcios</b></span></div>
+    </div>
+  </div>
+  <div class="wrap" style="position:relative">
+    <div class="path rv d4">
+      <div><i class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg></i><span>01</span><b>Uma carta de R$&nbsp;100&nbsp;mil</b><small>O ponto de partida</small></div>
+      <div><i class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 0 1-3 3H3"/></svg></i><span>02</span><b>Novas operações</b><small>Uma abre caminho para a próxima</small></div>
+      <div><i class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="6"/><path d="M18.1 10.6A6 6 0 1 1 10.6 18.1M8 7h1v4"/></svg></i><span>03</span><b>Diferentes fontes de renda</b><small>Além de casas e carros</small></div>
+      <div><i class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg></i><span>04</span><b>Patrimônio de R$&nbsp;500&nbsp;mil ou mais</b><small>O plano em construção</small></div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true"><div class="marquee__t" id="mq"></div></div>
+
+<!-- ================= DOBRA 2 ================= -->
+<section class="sec" id="oportunidade">
+  <div class="wrap">
+    <div class="split">
+      <div>
+        <span class="eyebrow rv">\\ O tamanho da oportunidade</span>
+        <h2 data-rev>E se você descobrisse que existem várias maneiras de ganhar dinheiro com uma <em class="k">carta de crédito?</em></h2>
+      </div>
+      <div class="stack rv d1">
+        <p>A maioria das pessoas acredita que o consórcio tem apenas uma finalidade:</p>
+        <p class="hl"><b>Ser contemplado e comprar um&nbsp;bem.</b></p>
+        <p>Mas quem conhece as possibilidades desse mercado sabe que a história pode ser muito&nbsp;diferente.</p>
+      </div>
+    </div>
+
+    <div class="rows">
+      <div class="row rv"><span class="n">/01</span><span class="t"><i class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 3 8l4 4M3 8h14M17 12l4 4-4 4M21 16H7"/></svg></i>Compra e venda</span><p>Estudar oportunidades de compra e venda de cartas&nbsp;contempladas.</p><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#e9c98f" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></div>
+      <div class="row rv"><span class="n">/02</span><span class="t"><i class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></i>Negociação</span><p>Identificar negociações com potencial de&nbsp;lucro.</p><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#e9c98f" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></div>
+      <div class="row rv"><span class="n">/03</span><span class="t"><i class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-7 9 7M5 10v10h14V10M10 20v-5h4v5"/></svg></i>Ativos</span><p>Utilizar o crédito para adquirir ativos que geram&nbsp;renda.</p><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#e9c98f" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></div>
+      <div class="row rv"><span class="n">/04</span><span class="t"><i class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5 9-5ZM3 13l9 5 9-5M3 17.5l9 5 9-5"/></svg></i>Novas operações</span><p>Aproveitar oportunidades de aquisição e estruturar novas&nbsp;operações.</p><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#e9c98f" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></div>
+    </div>
+    <p class="note rv"><b>E a compra de imóveis para receber aluguéis é apenas uma dessas&nbsp;possibilidades.</b></p>
+  </div>
+</section>
+
+<section class="manifesto">
+  <div class="wrap">
+    <span class="eyebrow rv">• Agora pense...</span>
+    <p class="fill" id="fill">Uma operação pode gerar capital para a próxima. Uma aquisição pode criar uma nova fonte de renda. E uma boa negociação pode abrir portas para novas conquistas.</p>
+    <div class="after">
+      <div class="stack rv">
+        <p>E se, em vez de depender de uma única estratégia, você aprendesse a reconhecer diferentes oportunidades conforme elas&nbsp;aparecem?</p>
+        <p>É assim que uma carta pode deixar de representar apenas uma compra e passar a fazer parte de um plano muito&nbsp;maior.</p>
+        <div class="mock" aria-hidden="true">
+          <div class="mk a">
+            <div class="mk__h"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg></i><span>Análise de carta<b>Carta A · contemplada</b></span></div>
+            <div class="mk__v">Crédito<b>R$ 100 mil</b></div>
+            <div class="mk__r">Custos<s style="--w:34%"></s></div>
+            <div class="mk__r">Riscos<s style="--w:26%"></s></div>
+            <div class="mk__r">Viabilidade<s style="--w:86%;--c:#8fdcae"></s></div>
+            <div class="mk__f ok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Faz sentido avançar</div>
+          </div>
+          <div class="mk b">
+            <div class="mk__h"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg></i><span>Análise de carta<b>Carta B · contemplada</b></span></div>
+            <div class="mk__v">Crédito<b>R$ 100 mil</b></div>
+            <div class="mk__r">Custos<s style="--w:82%;--c:#eda77e"></s></div>
+            <div class="mk__r">Riscos<s style="--w:74%;--c:#eda77e"></s></div>
+            <div class="mk__r">Viabilidade<s style="--w:22%"></s></div>
+            <div class="mk__f no"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5M12 17h.01M10.3 3.9 2.6 17a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>Pode fazer perder dinheiro</div>
+          </div>
+          <span class="mock__tag">Exemplo ilustrativo</span>
+        </div>
+      </div>
+      <div class="rv d1">
+        <span class="eyebrow">Mas existe uma pergunta que muda tudo...</span>
+        <h3>Como descobrir quais dessas oportunidades realmente valem a pena — e quais podem fazer você <em class="k">perder&nbsp;dinheiro?</em></h3>
+        <div class="cta" style="margin-top:36px">
+          <a class="btn js-cta" href="#"><span class="btn__t">Quero conhecer essas oportunidades</span><span class="arw"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f8dcb3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+          <div class="seal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Videoaulas + lives quinzenais com o Andrey</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DOBRA 3 ================= -->
+<section class="light sec" id="mecanismo">
+  <div class="dots"></div>
+  <div class="wrap" style="position:relative">
+    <div class="about">
+      <div class="story rv">
+        <div class="story__bars"><s></s><s></s><s></s><s></s></div>
+        <div class="story__who"><i>A</i>andrey <small>2h</small></div>
+        <img class="story__img" src="assets/andrey.jpg" alt="Andrey, gestor e especialista em consórcios" loading="lazy">
+        <div class="story__shade"></div>
+      </div>
+      <div>
+        <span class="eyebrow rv">[ O mecanismo ]</span>
+        <h2 data-rev>O segredo não está em ter muitas cartas. Está em saber identificar o que <em class="k">cada uma pode oferecer.</em></h2>
+        <div class="stack rv d1" style="margin-top:34px">
+          <p>Meu nome é <b>Andrey</b>, sou gestor e especialista em consórcios de uma grande administradora.</p>
+          <p>E depois de anos trabalhando nesse mercado, desenvolvi&nbsp;a</p>
+        </div>
+        <div class="method rv d2">Engenharia de Cartas de Crédito de <em class="k">Alto Lucro.</em></div>
+        <div class="stack rv d2" style="margin-top:22px">
+          <p>Um método criado para mostrar como explorar diferentes possibilidades de ganho com cartas de&nbsp;crédito.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="head center">
+      <span class="eyebrow rv">• Dentro dele, você vai descobrir</span>
+      <h2 data-rev>Cinco frentes para olhar uma carta e enxergar <em class="k">o que os outros ignoram</em></h2>
+    </div>
+
+    <div class="grid">
+      <article class="card rv"><span class="n">01 /</span><div class="tile"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div><h3>Como identificar cartas com potencial de negócio</h3><p>e reconhecer detalhes que a maioria das pessoas&nbsp;ignora.</p></article>
+      <article class="card rv d1"><span class="n">02 /</span><div class="tile"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></div><h3>Como planejar lances com estratégia</h3><p>para buscar melhores chances de&nbsp;contemplação.</p></article>
+      <article class="card rv d2"><span class="n">03 /</span><div class="tile"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 3 8l4 4M3 8h14M17 12l4 4-4 4M21 16H7"/></svg></div><h3>Como avaliar oportunidades de compra e venda de cartas contempladas</h3><p>e calcular o potencial de&nbsp;lucro.</p></article>
+      <article class="card rv"><span class="n">04 /</span><div class="tile"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13M10 21v-6h4v6"/></svg></div><h3>Como utilizar cartas para adquirir ativos que geram renda</h3><p>incluindo imóveis e outras possibilidades compatíveis com o&nbsp;crédito.</p></article>
+      <article class="card rv d1"><span class="n">05 /</span><div class="tile"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><path d="M10 6.5h4a3 3 0 0 1 3 3V14"/></svg></div><h3>Como estruturar novas operações</h3><p>e utilizar os resultados de uma oportunidade para buscar a&nbsp;próxima.</p></article>
+    </div>
+
+    <div class="lives rv">
+      <div class="lives__t">
+        <span class="eyebrow">E tem mais...</span>
+        <h3>Você não vai receber apenas <em class="k">videoaulas.</em></h3>
+        <p>Nas nossas lives quinzenais, vamos analisar oportunidades e explorar os bastidores desse mercado. Porque o mais valioso não é decorar uma única&nbsp;estratégia.</p>
+        <p class="hl"><b>É desenvolver a capacidade de olhar para uma carta de crédito e reconhecer possibilidades que outras pessoas nem sabem que&nbsp;existem.</b></p>
+      </div>
+      <div class="lives__img"><img src="assets/ativos.jpg" alt="" loading="lazy"><span class="live-tag">Lives quinzenais</span></div>
+    </div>
+
+    <div class="cta center" style="align-items:center">
+      <a class="btn js-cta" href="#"><span class="btn__t">Quero aprender o mecanismo</span><span class="arw"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f8dcb3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+      <div class="seal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Videoaulas + lives quinzenais com o Andrey</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DOBRA 4 ================= -->
+<section class="sec" id="para-quem">
+  <div class="wrap">
+    <div class="split">
+      <div>
+        <span class="eyebrow rv">\\ Para quem é</span>
+        <h2 data-rev>Você não precisa ser especialista em consórcios para começar a <em class="k">enxergar essas oportunidades.</em></h2>
+        <p class="lead rv d1" style="margin-top:28px;max-width:520px">E muito menos precisa ter R$&nbsp;500&nbsp;mil guardados no banco para começar a&nbsp;aprender.</p>
+      </div>
+      <div class="maybe">
+        <div class="rv"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i><p>Talvez você nunca tenha comprado uma&nbsp;carta.</p></div>
+        <div class="rv d1"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i><p>Talvez já tenha uma e não saiba como aproveitar suas&nbsp;possibilidades.</p></div>
+        <div class="rv d2"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i><p>Ou talvez acredite que, para ganhar dinheiro nesse mercado, precisa esperar anos até ser&nbsp;contemplado.</p></div>
+      </div>
+    </div>
+
+    <div style="margin-top:clamp(70px,9vw,130px)">
+      <span class="eyebrow rv">Mas existe algo que pode mudar completamente sua maneira de pensar...</span>
+    </div>
+    <div class="nem" style="margin-top:0">
+      <div class="rv"><i class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-7 9 7M5 10v10h14V10M10 20v-5h4v5"/></svg></i><span>/01</span><p>Nem toda oportunidade começa com a compra de um&nbsp;imóvel.</p></div>
+      <div class="rv d1"><i class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg></i><span>/02</span><p>Nem toda estratégia depende de receber&nbsp;aluguéis.</p></div>
+      <div class="rv d2"><i class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg></i><span>/03</span><p>E nem toda boa operação começa escolhendo a carta de maior&nbsp;valor.</p></div>
+    </div>
+
+    <div class="learn">
+      <h3 class="rv">Existem diferentes caminhos. O desafio é descobrir qual faz sentido para <em class="k">cada&nbsp;oportunidade.</em></h3>
+      <div class="stack rv d1">
+        <p>É justamente isso que você vai aprender dentro da <b>Engenharia de Cartas de&nbsp;Crédito.</b></p>
+        <p>Como analisar os números, reconhecer os riscos, planejar suas decisões e identificar possibilidades de ganho sem entrar em uma operação às&nbsp;cegas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="dots"></div>
+  <div class="trio rv"><i class="ic lg"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="6"/><path d="M18.1 10.6A6 6 0 1 1 10.6 18.1M8 7h1v4"/></svg></i><i class="ic lg"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg></i><i class="ic lg"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M14 9l2 2"/></svg></i></div>
+  <p class="pre rv">Porque você já sabe como as pessoas usam consórcios para comprar&nbsp;bens.</p>
+  <h2 class="center" data-rev>Agora descubra como analisar cartas de crédito para buscar lucros, criar fontes de renda e <em class="k">construir patrimônio de diferentes maneiras.</em></h2>
+  <div class="cta center rv">
+    <a class="btn js-cta" href="#"><span class="btn__t">Quero descobrir as estratégias</span><span class="arw"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f8dcb3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+    <div class="seal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Videoaulas + lives quinzenais com o Andrey</div>
+  </div>
+  <p class="disc">As possibilidades de ganho dependem das condições das cartas, dos custos, da contemplação e da viabilidade de cada operação. Não há lucro ou prazo de contemplação&nbsp;garantido.</p>
+</section>
+
+<div class="peek" id="peek" aria-hidden="true"><img src="assets/topico1.jpg" alt=""><img src="assets/topico2.jpg" alt=""><img src="assets/topico3.jpg" alt=""><img src="assets/topico4.jpg" alt=""></div>
+
+<footer>
+  <div class="wrap foot">
+    <img class="foot__logo" src="assets/logo-full.png" alt="Engenharia de Cartas de Crédito" width="1200" height="289">
+    <span>© <span id="yr"></span> Engenharia de Cartas de Crédito. Todos os direitos reservados.</span>
+    <nav><a href="#">Políticas de privacidade</a> | <a href="#">Termos de uso</a></nav>
+    <a class="credit" href="https://instagram.com/zeph.rafa" target="_blank" rel="noopener">Feito por @zeph.rafa</a>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+<script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+
+document.querySelectorAll('.js-cta').forEach(a => a.href = CHECKOUT_URL);
+
+/* faixa */
+const itens = ['Compra e venda de cartas contempladas','Lances com estratégia','Ativos que geram renda','Estruturação de novas operações','Lives quinzenais','Análise de oportunidades reais'];
+const ico = '<i><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#12201c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></i>';
+const mq = document.getElementById('mq');
+mq.innerHTML = [...itens,...itens,...itens,...itens].map(t => `<span class="pill">${ico}${t}</span>`).join('');
+
+/* scroll suave (só ponteiro fino) */
+let lenis = null;
+if (window.Lenis && matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion:reduce)').matches) {
+  lenis = new Lenis({ duration: 1.1 });
+  const raf = t => { lenis.raf(t); requestAnimationFrame(raf); }; requestAnimationFrame(raf);
+}
+document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+  const id = a.getAttribute('href'); if (id.length < 2) return;
+  const alvo = document.querySelector(id); if (!alvo) return;
+  e.preventDefault();
+  lenis ? lenis.scrollTo(alvo, { offset: -90 }) : alvo.scrollIntoView({ behavior: 'smooth' });
+}));
+
+/* entrada no scroll */
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
+/* a primeira dobra entra sozinha, sem depender do scroll */
+setTimeout(() => document.querySelectorAll('.hero .rv').forEach(el => el.classList.add('in')), 80);
+
+/* H2 revelando de entrada: quebra em linhas reais e revela com faixa do acento */
+function splitLines(h) {
+  const words = [];
+  h.childNodes.forEach(n => {
+    const isEm = n.nodeType === 1;
+    (n.textContent || '').split(/ +/).filter(Boolean).forEach(w => words.push({ w, isEm }));
+  });
+  h.innerHTML = words.map(o => `<span class="${o.isEm ? 'k' : ''}" style="display:inline-block">${o.w}</span>`).join(' ');
+  const lines = []; let top = null;
+  [...h.children].forEach((s, i) => { const t = s.offsetTop; if (top === null || Math.abs(t - top) > 6) { lines.push([]); top = t; } lines[lines.length - 1].push(words[i]); });
+  h.innerHTML = lines.map((l, i) => {
+    let html = '', open = false;
+    l.forEach((o, j) => { if (o.isEm && !open) { html += '<em class="k">'; open = true; } if (!o.isEm && open) { html = html.trimEnd() + '</em> '; open = false; } html += o.w + (j < l.length - 1 ? ' ' : ''); });
+    if (open) html += '</em>';
+    return `<span class="ze__l" style="--i:${i}">${html}</span>`;
+  }).join('');
+  h.classList.add('is-pronto');
+}
+const ioH = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visivel'); ioH.unobserve(e.target); } }), { rootMargin: '0px 0px -16% 0px' });
+const h2s = [...document.querySelectorAll('h2[data-rev]')]; h2s.forEach(h => h.dataset.orig = h.innerHTML);
+function montarTitulos(primeira) {
+  h2s.forEach(h => {
+    const visto = h.classList.contains('is-visivel');
+    h.classList.remove('is-pronto'); h.innerHTML = h.dataset.orig;
+    if (innerWidth <= 480) { h.classList.remove('is-visivel', 'sem-anim'); return; } // no celular o título quebra livre
+    splitLines(h);
+    if (visto) h.classList.add('sem-anim', 'is-visivel'); else if (primeira) ioH.observe(h);
+  });
+}
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(() => montarTitulos(true));
+let larg = innerWidth, tR; addEventListener('resize', () => { if (innerWidth === larg) return; larg = innerWidth; clearTimeout(tR); tR = setTimeout(() => montarTitulos(false), 180); });
+
+/* imagem do tópico acompanhando o cursor na lista */
+if (matchMedia('(pointer:fine)').matches) {
+  const peek = document.getElementById('peek'), pics = [...peek.querySelectorAll('img')];
+  let tx = 0, ty = 0, x = 0, y = 0, on = false, raf = null;
+  const loop = () => { x += (tx - x) * .16; y += (ty - y) * .16;
+    peek.style.transform = `translate(${x}px,${y}px) rotate(${Math.max(-8, Math.min(8, (tx - x) * .06))}deg)`;
+    raf = on || Math.abs(tx - x) > .5 ? requestAnimationFrame(loop) : null; };
+  document.querySelectorAll('.row').forEach((row, i) => {
+    row.addEventListener('mouseenter', e => { pics.forEach((p, k) => p.classList.toggle('on', k === i));
+      tx = Math.min(e.clientX + 26, innerWidth - 276); ty = e.clientY - 125; if (!on) { x = tx; y = ty; } on = true; peek.classList.add('on'); if (!raf) raf = requestAnimationFrame(loop); });
+    row.addEventListener('mousemove', e => { tx = Math.min(e.clientX + 26, innerWidth - 276); ty = e.clientY - 125; });
+  });
+  document.querySelector('.rows').addEventListener('mouseleave', () => { on = false; peek.classList.remove('on'); });
+}
+
+
+/* texto preenchendo a cor conforme o scroll */
+const fill = document.getElementById('fill');
+fill.innerHTML = fill.textContent.trim().split(/\s+/).map(w => `<span class="w">${w}</span>`).join(' ');
+const ws = [...fill.querySelectorAll('.w')];
+function paint() {
+  const r = fill.getBoundingClientRect(), vh = innerHeight;
+  const p = Math.min(1, Math.max(0, (vh * .85 - r.top) / (vh * .5 + r.height * .6)));
+  const n = Math.round(p * ws.length);
+  ws.forEach((w, i) => w.classList.toggle('on', i < n));
+}
+
+/* menu: some ao descer, volta ao subir + hover deslizante + scrollspy */
+const nav = document.getElementById('nav'); let last = 0;
+const wrap = document.getElementById('links'), hl = wrap.querySelector('.nav__hl'), items = [...wrap.querySelectorAll('a')]; let active = null;
+function move(a) { if (!a) { hl.classList.remove('is-visible'); return; } const r = a.getBoundingClientRect(), w = wrap.getBoundingClientRect();
+  hl.style.width = r.width + 'px'; hl.style.height = r.height + 'px'; hl.style.transform = `translate(${r.left - w.left}px,${r.top - w.top}px)`; hl.classList.add('is-visible'); }
+items.forEach(a => { a.addEventListener('mouseenter', () => move(a)); a.addEventListener('click', () => { active = a; }); });
+wrap.addEventListener('mouseleave', () => move(active)); addEventListener('resize', () => move(active));
+const secs = items.map(a => document.querySelector(a.getAttribute('href')));
+function onScroll() {
+  const y = scrollY;
+  nav.classList.toggle('hide', y > last && y > innerHeight * .9); last = y;
+  let cur = null; secs.forEach((s, i) => { if (s && s.getBoundingClientRect().top < innerHeight * .4) cur = items[i]; });
+  if (cur !== active) { active = cur; if (!wrap.matches(':hover')) move(active); }
+  paint();
+}
+addEventListener('scroll', onScroll, { passive: true }); onScroll();
+</script>
+</body>
+</html>
