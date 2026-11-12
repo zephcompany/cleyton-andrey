@@ -346,7 +346,13 @@ footer{padding:34px 0 44px}
 }
 /* hero no celular: centralizado, compacto, botão na primeira tela */
 @media (max-width:600px){
-  .hero__in{padding-block:92px 40px;text-align:center}
+  /* menu no celular: só a logo, pequena, no topo da página */
+  .nav{position:absolute;top:30px}
+  .nav.hide{transform:none}
+  .nav__bar{padding:0;background:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+  .nav__bar::before,.nav__cta{display:none}
+  .brand__logo{height:28px}
+  .hero__in{padding-block:84px 40px;text-align:center}
   .hero__in .eyebrow,.hero .who{display:none}
   .hero h1{font-size:30px;line-height:1.02;text-wrap:balance}
   .hero__in>.hero__vis{margin-top:18px;justify-items:center}
