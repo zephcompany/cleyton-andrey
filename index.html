@@ -344,6 +344,21 @@ footer{padding:34px 0 44px}
   .brand span{display:none}
   .ze__l{white-space:normal}
 }
+/* hero no celular: centralizado, compacto, botão na primeira tela */
+@media (max-width:600px){
+  .hero__in{padding-block:92px 40px;text-align:center}
+  .hero__in .eyebrow,.hero .who{display:none}
+  .hero h1{font-size:30px;line-height:1.02;text-wrap:balance}
+  .hero__in>.hero__vis{margin-top:18px;justify-items:center}
+  .hero .lead{margin:18px auto 0;font-size:15px;line-height:1.35}
+  .hero__in .hero__txt{order:7;margin:26px auto 0;font-size:14px;line-height:1.45;gap:8px}
+  .hero .cta{margin-top:18px;align-items:center}
+  .hero .btn{height:60px;padding:0 64px 0 22px;font-size:12px;text-align:center;justify-content:center}
+  .hero .btn .arw{width:46px;height:46px;right:7px}
+  .hero .btn .arw svg{right:12px}
+  .hero .btn:hover .arw{width:calc(100% - 14px)}
+  .hero .seal{margin-top:12px}
+}
 @media (prefers-reduced-motion:reduce){
   .marquee__t,.hero__vis img.obj,.fx,.fx img,.orbit{animation:none}
   .gcard,.gbars s{animation:none}
